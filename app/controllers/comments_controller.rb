@@ -1,0 +1,53 @@
+class CommentsController < ApplicationController
+  before_action :set_comment, only: %i[ show update destroy ]
+
+  # GET /comments
+  def index
+    @page = params.fetch(:page).to_i
+    @count = Comment.count
+    @comments = Comment.offset((@page - 1) * Constants::ITEMS_PER_PAGE).limit(Constants::ITEMS_PER_PAGE)
+
+    render json: { comments: @comments, offset: @page, total_pages: (@count / Constants::ITEMS_PER_PAGE.to_f).ceil }
+  end
+
+  # GET /comments/1
+  def show
+    render json: @comment
+  end
+
+  # POST /comments
+  def create
+    @comment = Comment.new(comment_params)
+
+    if @comment.save
+      render json: @comment, status: :created, location: @comment
+    else
+      render json: @comment.errors, status: :unprocessable_entity
+    end
+  end
+
+  # PATCH/PUT /comments/1
+  def update
+    if @comment.update(comment_params)
+      render json: @comment
+    else
+      render json: @comment.errors, status: :unprocessable_entity
+    end
+  end
+
+  # DELETE /comments/1
+  def destroy
+    @comment.destroy
+  end
+
+  private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_comment
+      @comment = Comment.find(params[:id])
+    end
+
+    # Only allow a list of trusted parameters through.
+    def comment_params
+      params.permit(:content, :user_id, :post_id)
+    end
+end
