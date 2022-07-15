@@ -3,11 +3,14 @@ class CommentsController < ApplicationController
 
   # GET /comments
   def index
-    @page = params.fetch(:page).to_i
-    @count = Comment.count
-    @comments = Comment.offset((@page - 1) * Constants::ITEMS_PER_PAGE).limit(Constants::ITEMS_PER_PAGE)
+    @comments = Comment.all
 
-    render json: { comments: @comments, offset: @page, total_pages: (@count / Constants::ITEMS_PER_PAGE.to_f).ceil }
+    render json: @comments
+    # @page = params.fetch(:page).to_i
+    # @count = Comment.count
+    # @comments = Comment.offset((@page - 1) * Constants::ITEMS_PER_PAGE).limit(Constants::ITEMS_PER_PAGE)
+
+    # render json: { comments: @comments, offset: @page, total_pages: (@count / Constants::ITEMS_PER_PAGE.to_f).ceil }
   end
 
   # GET /comments/1

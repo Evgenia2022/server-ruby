@@ -3,11 +3,14 @@ class PostsController < ApplicationController
 
   # GET /posts
   def index
-    page = params.fetch(:page).to_i
-    count = Post.count
-    posts = Post.offset((page - 1) * Constants::ITEMS_PER_PAGE).limit(Constants::ITEMS_PER_PAGE)
+    @posts = Post.all
 
-    render json: { posts: posts, offset: page, total_pages: (count / Constants::ITEMS_PER_PAGE.to_f).ceil }
+    render json: @posts
+    # page = params.fetch(:page).to_i
+    # count = Post.count
+    # posts = Post.offset((page - 1) * Constants::ITEMS_PER_PAGE).limit(Constants::ITEMS_PER_PAGE)
+
+    # render json: { posts: posts, offset: page, total_pages: (count / Constants::ITEMS_PER_PAGE.to_f).ceil }
   end
 
   # GET /posts/1

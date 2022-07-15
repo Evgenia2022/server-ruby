@@ -3,16 +3,21 @@ class UsersController < ApplicationController
 
   # GET /users
   def index
-    page = params.fetch(:page).to_i
-    count = User.count
-    users = User.offset((page - 1) * Constants::ITEMS_PER_PAGE).limit(Constants::ITEMS_PER_PAGE)
+    @users = User.all
 
-    render json: { users: users, page: page, total_pages: (count / Constants::ITEMS_PER_PAGE.to_f).ceil }
+    render json: @users
   end
+  # def index
+  #   page = params.fetch(:page).to_i
+  #   count = User.count
+  #   users = User.offset((page - 1) * Constants::ITEMS_PER_PAGE).limit(Constants::ITEMS_PER_PAGE)
+
+  #   render json: { users: users, page: page, total_pages: (count / Constants::ITEMS_PER_PAGE.to_f).ceil }
+  # end
 
   # GET /users/1
   def show
-    render json: @user, include: :posts
+    render json: @user.present.user_context, include: :posts
   end
 
   # POST /users
